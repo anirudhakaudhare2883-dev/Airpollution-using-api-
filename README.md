@@ -169,15 +169,15 @@ The **Random Forest Algorithm** achieved the best performance for AQI prediction
 
 ## 🏠 Home Page
 
-<img width="100%" src="https://via.placeholder.com/1200x500.png?text=Air+Quality+Prediction+Dashboard" />
+<img width="1440" height="693" alt="image" src="https://github.com/user-attachments/assets/eb5fd58d-15cd-43f9-a5e7-a7b8d2254acb" />
 
 ## 📊 AQI Dashboard
 
-<img width="100%" src="https://via.placeholder.com/1200x500.png?text=AQI+Prediction+Output" />
+<img width="1077" height="761" alt="image" src="https://github.com/user-attachments/assets/832a35e6-85c4-4f2e-9e8f-57c72ed91991" />
 
-## 🧠 System Architecture
+## Output
+<img width="1308" height="771" alt="image" src="https://github.com/user-attachments/assets/247f2067-d230-4cef-8bca-fb470541494d" />
 
-<img width="100%" src="https://via.placeholder.com/1200x500.png?text=System+Architecture" />
 
 ---
 
