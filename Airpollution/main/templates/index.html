@@ -1,0 +1,533 @@
+{% extends "base.html" %}
+
+{% block title %}AirQuality AI{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ══════════════════════════════════════════
+       PREMIUM HOME PAGE STYLES
+    ══════════════════════════════════════════ */
+
+    /* ── CORE ESTHETICS ── */
+    :root {
+        --neon-cyan: #f472b6;
+        --neon-purple: #ec4899;
+        --premium-glass: rgba(18, 18, 23, 0.65);
+        --premium-border: rgba(255, 255, 255, 0.08);
+        --glow-primary: rgba(236, 72, 153, 0.3);
+        --glow-secondary: rgba(244, 114, 182, 0.3);
+    }
+
+    /* ── SECTION 1: HERO ── */
+    .hero-section {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 10rem 2rem 6rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 1.5rem;
+        border-radius: 100px;
+        background: rgba(15, 15, 20, 0.8);
+        border: 1px solid rgba(236, 72, 153, 0.4);
+        color: var(--neon-cyan);
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 2.5rem;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 0 30px rgba(236, 72, 153, 0.2), inset 0 0 10px rgba(236, 72, 153, 0.1);
+        z-index: 10;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hero-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 40px rgba(236, 72, 153, 0.4), inset 0 0 15px rgba(236, 72, 153, 0.2);
+    }
+
+    .hero-badge .pulse-dot {
+        width: 10px;
+        height: 10px;
+        background: var(--neon-cyan);
+        border-radius: 50%;
+        box-shadow: 0 0 15px var(--neon-cyan), 0 0 5px #fff;
+        animation: premiumPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes premiumPulse {
+
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: .5;
+            transform: scale(1.2);
+        }
+    }
+
+    .hero-section h1 {
+        font-size: clamp(3.5rem, 6vw, 5.5rem);
+        font-weight: 900;
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        margin-bottom: 1.8rem;
+        max-width: 1000px;
+        background: linear-gradient(135deg, #ffffff 10%, #fbcfe8 40%, #f472b6 70%, #ffffff 90%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shine 8s linear infinite;
+        z-index: 10;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes shine {
+        to {
+            background-position: 200% center;
+        }
+    }
+
+    .hero-section p {
+        font-size: 1.35rem;
+        color: #94a3b8;
+        max-width: 750px;
+        margin: 0 auto 3.5rem;
+        line-height: 1.8;
+        z-index: 10;
+        font-weight: 400;
+        letter-spacing: 0.2px;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1.5rem;
+        z-index: 10;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* ── PREMIUM GRID CARDS ── */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2.5rem;
+        margin-top: 4rem;
+    }
+
+    .premium-card {
+        padding: 3.5rem 2.5rem;
+        border-radius: 1.5rem;
+        background: var(--premium-glass);
+        border: 1px solid var(--premium-border);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .premium-card:hover {
+        transform: translateY(-12px);
+        background: rgba(25, 25, 32, 0.8);
+        border-color: rgba(236, 72, 153, 0.4);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6),
+            0 0 40px rgba(236, 72, 153, 0.1) inset;
+    }
+
+    .premium-card:hover::before {
+        opacity: 1;
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        display: inline-block;
+        filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.4));
+    }
+
+    .premium-card h3 {
+        color: #f8fafc;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        letter-spacing: -0.5px;
+    }
+
+    .premium-card p {
+        color: #94a3b8;
+        font-size: 1.05rem;
+        line-height: 1.7;
+    }
+
+    /* ── DASHBOARD PREVIEW OVERHAUL ── */
+    .preview-container {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 5rem;
+        align-items: center;
+        margin-top: 4rem;
+        background: radial-gradient(circle at center, rgba(236, 72, 153, 0.05) 0%, transparent 70%);
+        padding: 4rem 0;
+    }
+
+    .preview-text-block h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        letter-spacing: -1px;
+    }
+
+    .preview-mockup {
+        background: rgba(10, 10, 15, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8),
+            0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+            0 0 60px rgba(244, 114, 182, 0.15);
+        position: relative;
+        transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+        transition: transform 0.5s ease;
+    }
+
+    .preview-mockup:hover {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+    }
+
+    .mockup-header {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .mac-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    /* ── ENHANCED NAVIGATION CARDS ── */
+    .nav-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+        margin-top: 4rem;
+    }
+
+    .nav-card-premium {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 2.5rem;
+        background: var(--premium-glass);
+        border: 1px solid var(--premium-border);
+        border-radius: 1.5rem;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        backdrop-filter: blur(16px);
+    }
+
+    .nav-card-premium:hover {
+        background: rgba(30, 30, 40, 0.9);
+        border-color: rgba(244, 114, 182, 0.5);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(244, 114, 182, 0.15) inset;
+    }
+
+    .nav-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 1.2rem;
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        flex-shrink: 0;
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-card-premium h4 {
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .nav-card-premium:hover h4 {
+        color: #ec4899;
+    }
+
+    .nav-card-premium p {
+        color: #94a3b8;
+        font-size: 1rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+        .preview-container {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .preview-mockup {
+            transform: none;
+        }
+
+        .nav-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ── CALL TO ACTION ── */
+    .cta-premium {
+        margin: 8rem 0 4rem;
+        padding: 6rem 3rem;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(244, 114, 182, 0.05));
+        border: 1px solid rgba(236, 72, 153, 0.3);
+        border-radius: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 80px rgba(236, 72, 153, 0.1);
+    }
+
+    .cta-premium h2 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: #fff;
+        margin-bottom: 1.5rem;
+        letter-spacing: -1px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="container">
+
+    <!-- ═══ SECTION 1: HERO SECTION ═══ -->
+    <section class="hero-section">
+        <!-- Background Elements -->
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-grid"></div>
+
+        <div class="hero-badge reveal-up">
+            <div class="pulse-dot"></div>
+            <span>AI Powered Air Quality Monitoring Platform</span>
+        </div>
+
+        <h1 class="reveal-up delay-100"
+            style="font-size: clamp(3.5rem, 6vw, 4.8rem); line-height: 1.1; margin-bottom: 2rem;">Air Quality Prediction
+            <br /><span style="color: #fbcfe8;">System</span></h1>
+
+        <p class="reveal-up delay-200">
+            Explore real-time environmental insights and visualize pollution trends through an interactive AI-powered
+            dashboard.
+        </p>
+
+        <div class="hero-buttons reveal-up delay-300">
+            <a href="{{ url_for('predict') }}" class="btn-glow">
+                <i class="fa-solid fa-gauge-high"></i> Go to Prediction Dashboard
+            </a>
+        </div>
+    </section>
+
+    <!-- ═══ SECTION 2: PLATFORM IMPACT ═══ -->
+    <section class="section-spacing">
+        <h2 class="section-title text-animated-gradient" data-aos="fade-up">Empowering Better Decisions</h2>
+        <p class="section-desc" data-aos="fade-up" data-aos-delay="100"
+            style="text-align: center; margin-bottom: 3rem;">
+            Delivering actionable intelligence across various sectors to mitigate the impacts of severe air pollution.
+        </p>
+
+        <div class="features-grid">
+            <div class="premium-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fa-solid fa-users feature-icon"
+                    style="background: linear-gradient(135deg, #f472b6, #db2777); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                <h3>For Citizens</h3>
+                <p>Receive instant alerts regarding sudden spikes in localized pollution levels to
+                    minimize exposure and safeguard personal respiratory health.</p>
+            </div>
+
+            <div class="premium-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fa-solid fa-building-columns feature-icon"
+                    style="background: linear-gradient(135deg, #f43f5e, #be185d); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                <h3>For Policymakers</h3>
+                <p>Utilize highly accurate, data-driven forecasts to rapidly enact emergency traffic
+                    protocols or industrial emission regulations when needed.</p>
+            </div>
+
+            <div class="premium-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="fa-solid fa-flask feature-icon"
+                    style="background: linear-gradient(135deg, #f9a8d4, #db2777); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                <h3>For Researchers</h3>
+                <p>Access structured, continuous environmental data streams to conduct long-term
+                    epidemiological studies and validate novel predictive models.</p>
+            </div>
+
+            <div class="premium-card" data-aos="fade-up" data-aos-delay="400"
+                style="grid-column: 1 / -1; max-width: 900px; justify-self: center; text-align: center; border-color: rgba(244, 114, 182, 0.4); background: linear-gradient(160deg, rgba(20, 20, 30, 0.8), rgba(10, 10, 15, 0.95));">
+                <h3
+                    style="font-size: 2.5rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #f472b6, #ec4899); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                    96.8% Predictive Accuracy</h3>
+                <p style="font-size: 1.2rem; line-height: 1.8; max-width: 700px; margin: 0 auto; color: #cbd5e1;">Our
+                    robust ensembled machine learning
+                    architecture achieves state-of-the-art precision, consistently outperforming traditional localized
+                    hardware sensor forecasts by intelligently analyzing complex, non-linear atmospheric patterns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ SECTION 3: DASHBOARD PREVIEW ═══ -->
+    <section class="section-spacing">
+        <div class="preview-container">
+            <div class="preview-text-block" data-aos="fade-right">
+                <h2 class="text-animated-gradient">Intelligent AQI Dashboard</h2>
+                <p style="color: #cbd5e1; font-size: 1.25rem; margin-bottom: 2rem; line-height: 1.6;">Seamlessly monitor
+                    active
+                    pollution data and generate predictive estimations through our premier interactive interface.</p>
+
+                <p style="color: #94a3b8; font-size: 1.1rem; line-height: 1.8;">The dashboard elegantly compiles
+                    environmental API parameters—such as PM2.5, NO₂, CO, and O₃ metrics—into a unified visual command
+                    center. Utilizing advanced mapping alongside intelligent gauges, users are instantaneously alerted
+                    to localized air quality shifts and associated health risk advisories.</p>
+            </div>
+
+            <div class="preview-mockup" data-aos="fade-left">
+                <div class="mockup-header">
+                    <div class="mac-dot" style="background: #ec4899;"></div>
+                    <div class="mac-dot" style="background: #f472b6;"></div>
+                    <div class="mac-dot" style="background: #be185d;"></div>
+                </div>
+                <!-- Abstract Dashboard Visual Placeholder -->
+                <div style="display: flex; gap: 1rem; height: 300px;">
+                    <div
+                        style="flex: 1; background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.2); border-radius: 1rem; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-gauge"
+                            style="font-size: 4rem; color: #ec4899; filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.4));"></i>
+                    </div>
+                    <div style="flex: 2; display: flex; flex-direction: column; gap: 1rem;">
+                        <div
+                            style="flex: 1.5; background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.2); border-radius: 1rem; display: flex; align-items: flex-end; padding: 1.5rem; gap: 1rem;">
+                            <!-- Animated Bars -->
+                            <div
+                                style="flex: 1; height: 40%; background: linear-gradient(to top, #e11d48, #ec4899); border-radius: 4px; box-shadow: 0 0 10px rgba(56,189,248,0.3);">
+                            </div>
+                            <div
+                                style="flex: 1; height: 75%; background: linear-gradient(to top, #e11d48, #ec4899); border-radius: 4px; box-shadow: 0 0 10px rgba(56,189,248,0.3);">
+                            </div>
+                            <div
+                                style="flex: 1; height: 55%; background: linear-gradient(to top, #e11d48, #ec4899); border-radius: 4px; box-shadow: 0 0 10px rgba(56,189,248,0.3);">
+                            </div>
+                            <div
+                                style="flex: 1; height: 90%; background: linear-gradient(to top, #e11d48, #ec4899); border-radius: 4px; box-shadow: 0 0 10px rgba(56,189,248,0.3);">
+                            </div>
+                            <div
+                                style="flex: 1; height: 60%; background: linear-gradient(to top, #e11d48, #ec4899); border-radius: 4px; box-shadow: 0 0 10px rgba(56,189,248,0.3);">
+                            </div>
+                        </div>
+                        <div
+                            style="flex: 1; background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.2); border-radius: 1rem; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                            <div
+                                style="position: absolute; width: 150%; height: 150%; background: radial-gradient(circle, rgba(52, 211, 153, 0.1) 0%, transparent 60%);">
+                            </div>
+                            <i class="fa-solid fa-map-location-dot"
+                                style="font-size: 2.5rem; color: #f9a8d4; z-index: 1;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ SECTION 4: QUICK NAVIGATION ═══ -->
+    <section class="section-spacing">
+        <h2 class="section-title text-center text-animated-gradient" data-aos="fade-up">Explore The Platform</h2>
+
+        <div class="nav-grid">
+            <a href="{{ url_for('predict') }}" class="nav-card-premium" data-aos="fade-up" data-aos-delay="100">
+                <div class="nav-icon-wrapper"
+                    style="color: #ec4899; background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3);"><i
+                        class="fa-solid fa-bolt"></i></div>
+                <div class="nav-card-content">
+                    <h4>Prediction Dashboard</h4>
+                    <p>Enter a location to monitor current API pollution stats and generate AI-driven air quality
+                        insights.</p>
+                </div>
+            </a>
+
+
+
+            <a href="{{ url_for('project') }}" class="nav-card-premium" data-aos="fade-up" data-aos-delay="200">
+                <div class="nav-icon-wrapper"
+                    style="color: #ec4899; background: rgba(236,72,153,0.1); border-color: rgba(236,72,153,0.3);"><i
+                        class="fa-solid fa-bullseye"></i></div>
+                <div class="nav-card-content">
+                    <h4>Project Overview</h4>
+                    <p>Explore the methodology, core objectives, and expected outcomes supporting this prediction
+                        system.</p>
+                </div>
+            </a>
+
+            <a href="{{ url_for('architecture') }}" class="nav-card-premium" data-aos="fade-up" data-aos-delay="300">
+                <div class="nav-icon-wrapper"
+                    style="color: #ec4899; background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3);"><i
+                        class="fa-solid fa-network-wired"></i></div>
+                <div class="nav-card-content">
+                    <h4>System Architecture</h4>
+                    <p>View the technical pipeline from coordinate detection protocols through our machine learning
+                        endpoints.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ═══ SECTION 5: CALL TO ACTION ═══ -->
+    <section class="cta-premium" data-aos="zoom-in">
+        <h2>Start Exploring Air Quality Data</h2>
+        <p
+            style="color: #94a3b8; font-size: 1.25rem; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Join the revolution in environmental monitoring. Predict, analyze, and protect with our state-of-the-art AI
+            pipeline.</p>
+        <a href="{{ url_for('predict') }}" class="btn-glow"
+            style="display: inline-flex; font-size: 1.15rem; padding: 1rem 2.5rem;">
+            <i class="fa-solid fa-gauge-high"></i> Initialize Dashboard
+        </a>
+    </section>
+
+</main>
+{% endblock %}

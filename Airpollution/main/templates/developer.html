@@ -1,0 +1,741 @@
+{% extends "base.html" %}
+
+{% block title %}Developer Impact | AirQuality AI{% endblock %}
+{% block nav_dev %}active{% endblock %}
+
+{% block extra_css %}
+<!-- Load Three.js safely from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+    /* ══════════════════════════════════════════
+       3D PORTFOLIO AESTHETIC (Project Focused)
+    ══════════════════════════════════════════ */
+
+    /* Hide base.html canvas to avoid conflict with this page's massive 3D bg */
+    #mesh-canvas {
+        display: none !important;
+    }
+
+    .aurora-blur,
+    .aurora-blur-2 {
+        display: none !important;
+    }
+
+    body {
+        background-color: #15050a;
+        /* Deep dark space color */
+        overflow-x: hidden;
+    }
+
+    /* ── 3D CANVAS BACKGROUND ── */
+    #bg-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .portfolio-wrapper {
+        position: relative;
+        z-index: 10;
+        padding-top: 10rem;
+        padding-bottom: 8rem;
+    }
+
+    /* ── TYPOGRAPHY & HERO ── */
+    .hero-section {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 0 5%;
+        position: relative;
+    }
+
+    .hero-greeting {
+        font-family: var(--font-mono);
+        color: #f9a8d4;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        animation: slideInLeft 1s ease-out forwards;
+        opacity: 0;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 7vw, 6rem);
+        font-weight: 900;
+        line-height: 1.1;
+        color: white;
+        margin-bottom: 1.5rem;
+        animation: slideInLeft 1s ease-out 0.2s forwards;
+        opacity: 0;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-title span {
+        color: #f9a8d4;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1.2rem, 2vw, 1.8rem);
+        color: #fbcfe8;
+        max-width: 800px;
+        line-height: 1.6;
+        animation: slideInLeft 1s ease-out 0.4s forwards;
+        opacity: 0;
+        font-weight: 300;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-100px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 35px;
+        height: 64px;
+        border-radius: 30px;
+        border: 4px solid #f9a8d4;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 8px 0;
+        animation: fadeIn 2s ease-in 1s forwards;
+        opacity: 0;
+    }
+
+    .scroll-indicator::before {
+        content: '';
+        width: 12px;
+        height: 12px;
+        background: #f9a8d4;
+        border-radius: 50%;
+        animation: scrollBounce 2s infinite;
+    }
+
+    @keyframes scrollBounce {
+        0% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(24px);
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* ── SECTION STYLING ── */
+    .section-container {
+        padding: 6rem 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .section-head-text {
+        font-size: clamp(3rem, 5vw, 4rem);
+        font-weight: 900;
+        color: white;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+    }
+
+    .section-sub-text {
+        font-family: var(--font-mono);
+        color: #fbcfe8;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 3rem;
+    }
+
+    /* ── GLASS TILT CARDS ── */
+    .tilt-card-wrapper {
+        perspective: 1000px;
+        transform-style: preserve-3d;
+    }
+
+    .ServiceCard {
+        background: linear-gradient(135deg, rgba(35, 15, 25, 0.8), rgba(20, 5, 15, 0.95));
+        border-radius: 20px;
+        border: 1px solid rgba(236, 72, 153, 0.2);
+        padding: 3rem 2rem;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-direction: column;
+        min-height: 280px;
+        transition: transform 0.1s;
+        transform-style: preserve-3d;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .ServiceCard:hover {
+        border-color: rgba(236, 72, 153, 0.6);
+        box-shadow: 0 20px 50px rgba(236, 72, 153, 0.2);
+    }
+
+    .ServiceCard i {
+        font-size: 4rem;
+        color: #f9a8d4;
+        transform: translateZ(50px);
+        filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.5));
+    }
+
+    .ServiceCard h3 {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: bold;
+        text-align: center;
+        transform: translateZ(30px);
+    }
+
+    /* ── TIMELINE UI ── */
+    .vertical-timeline {
+        position: relative;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .vertical-timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 4px;
+        height: 100%;
+        background: rgba(236, 72, 153, 0.3);
+        transform: translateX(-50%);
+    }
+
+    .timeline-item {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 50%;
+        position: relative;
+        margin-bottom: 4rem;
+        width: 100%;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s ease-out;
+    }
+
+    .timeline-item.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .timeline-item:nth-child(even) {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 50%;
+    }
+
+    .timeline-icon {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #501b2d;
+        border: 4px solid #f9a8d4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+    }
+
+    .timeline-icon i {
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .timeline-content {
+        background: #2a121a;
+        padding: 2.5rem;
+        border-radius: 1rem;
+        width: 90%;
+        border-bottom: 4px solid #f9a8d4;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        position: relative;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+        margin-right: 3rem;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -15px;
+        border-style: solid;
+        border-width: 15px 0 15px 15px;
+        border-color: transparent transparent transparent #2a121a;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content {
+        margin-left: 3rem;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: -15px;
+        border-style: solid;
+        border-width: 15px 15px 15px 0;
+        border-color: transparent #2a121a transparent transparent;
+    }
+
+    .timeline-content h3 {
+        color: white;
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-content p {
+        color: #f9a8d4;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    /* ── TECH BALLS ── */
+    .tech-grid-3d {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        margin-top: 4rem;
+    }
+
+    .tech-ball {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, #831843, #2a121a);
+        box-shadow:
+            inset -10px -10px 20px rgba(0, 0, 0, 0.8),
+            inset 10px 10px 20px rgba(255, 255, 255, 0.2),
+            0 15px 25px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        transition: transform 0.3s;
+        cursor: grab;
+        animation: float 4s infinite ease-in-out;
+        position: relative;
+    }
+
+    .tech-label {
+        position: absolute;
+        bottom: -30px;
+        font-size: 0.9rem;
+        font-family: var(--font-mono);
+        color: #fbcfe8;
+        opacity: 0;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+    }
+
+    .tech-ball:hover {
+        transform: scale(1.1);
+    }
+
+    .tech-ball:hover .tech-label {
+        opacity: 1;
+    }
+
+    .tech-ball:nth-child(2) {
+        animation-delay: 0.5s;
+        color: #ec4899;
+    }
+
+    .tech-ball:nth-child(3) {
+        animation-delay: 1s;
+        color: #f9a8d4;
+    }
+
+    .tech-ball:nth-child(4) {
+        animation-delay: 1.5s;
+        color: #fbcfe8;
+    }
+
+    .tech-ball:nth-child(5) {
+        animation-delay: 2s;
+        color: #be185d;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .vertical-timeline::before {
+            left: 30px;
+        }
+
+        .timeline-item {
+            justify-content: flex-start !important;
+            padding-left: 80px !important;
+            padding-right: 0 !important;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content,
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin: 0 !important;
+            width: 100%;
+        }
+
+        .timeline-icon {
+            left: 30px;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            border-width: 15px 15px 15px 0;
+            border-color: transparent #2a121a transparent transparent;
+            right: auto;
+            left: -15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Three JS Background Canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<div class="portfolio-wrapper">
+
+    <!-- PROJECT HERO -->
+    <section class="hero-section">
+        <div class="hero-greeting">Developer Profile</div>
+        <h1 class="hero-title">Anirudha <span>Kaudhare</span></h1>
+        <p class="hero-subtitle">
+            Lead Developer of the Air Quality Prediction Project. <br class="hidden sm:block" />
+            Specializing in geospatial data engineering, machine learning modeling, and Flask-based web infrastructure.
+        </p>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <!-- PROJECT SCOPE (TILT CARDS) -->
+    <section class="section-container" id="about">
+        <p class="section-sub-text">Core Contributions</p>
+        <h2 class="section-head-text">Project Scope.</h2>
+        <p style="color: #f9a8d4; font-size: 1.2rem; max-width: 800px; line-height: 1.8; margin-bottom: 4rem;">
+            My role in the AirQuality AI initiative encompassed the entire full-stack lifecycle. From extracting and
+            cleaning raw meteorological telemetry to training the Random Forest algorithm and deploying the final
+            predictive Flask dashboard.
+        </p>
+
+        <div class="grid-4" style="gap: 2.5rem;">
+            <!-- Tilt Card 1 -->
+            <div class="tilt-card-wrapper">
+                <div class="ServiceCard">
+                    <i class="fa-solid fa-database"></i>
+                    <h3>Data Engineering</h3>
+                </div>
+            </div>
+            <!-- Tilt Card 2 -->
+            <div class="tilt-card-wrapper">
+                <div class="ServiceCard">
+                    <i class="fa-solid fa-brain"></i>
+                    <h3>Machine Learning</h3>
+                </div>
+            </div>
+            <!-- Tilt Card 3 -->
+            <div class="tilt-card-wrapper">
+                <div class="ServiceCard">
+                    <i class="fa-solid fa-flask"></i>
+                    <h3>Flask Routing</h3>
+                </div>
+            </div>
+            <!-- Tilt Card 4 -->
+            <div class="tilt-card-wrapper">
+                <div class="ServiceCard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>UI Visualization</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECT DEVELOPMENT TIMELINE -->
+    <section class="section-container" id="work">
+        <p class="section-sub-text">Implementation Phases</p>
+        <h2 class="section-head-text">Development Lifecycle.</h2>
+
+        <div class="vertical-timeline">
+            <!-- Phase 1 -->
+            <div class="timeline-item reveal-trigger">
+                <div class="timeline-icon" style="background: #fce7f3;"><i class="fa-solid fa-magnifying-glass-chart"
+                        style="color: #ec4899;"></i></div>
+                <div class="timeline-content">
+                    <h3>Phase 1: Dataset Architecture</h3>
+                    <p>Scrubbed and normalized historical meteorological and pollutant datasets for the target region.
+                        Engineered vital spatial features including PM2.5, PM10, NO2, and Ozone parameters ensuring high
+                        data integrity.</p>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="timeline-item reveal-trigger">
+                <div class="timeline-icon" style="background: #fbcfe8;"><i class="fa-solid fa-robot"
+                        style="color: #be185d;"></i></div>
+                <div class="timeline-content">
+                    <h3>Phase 2: Model Training</h3>
+                    <p>Constructed and tuned a Random Forest Regressor using Scikit-Learn. Achieved a predictive R²
+                        score of 0.968, utilizing internal cross-validation to prevent geospatial overfitting.</p>
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="timeline-item reveal-trigger">
+                <div class="timeline-icon" style="background: #fdf2f8;"><i class="fa-solid fa-server"
+                        style="color: #f472b6;"></i></div>
+                <div class="timeline-content">
+                    <h3>Phase 3: Backend Infrastructure</h3>
+                    <p>Developed custom Python Flask routing mapping backend model inferences directly to frontend
+                        queries. Serialized the trained model state for hyper-fast real-time coordinate prediction
+                        requests.</p>
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="timeline-item reveal-trigger">
+                <div class="timeline-icon" style="background: #f9a8d4;"><i class="fa-solid fa-desktop"
+                        style="color: #ec4899;"></i></div>
+                <div class="timeline-content">
+                    <h3>Phase 4: Interface Deployment</h3>
+                    <p>Designed the final responsive interface, embedding the mathematical prediction output into a
+                        highly dynamic, visually accessible 3D-styled user interface with advanced CSS matrix mapping.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECT TECHNOLOGIES -->
+    <section class="section-container">
+        <p class="section-sub-text">Infrastructure Built With</p>
+        <h2 class="section-head-text text-center">Project Stack.</h2>
+        <div class="tech-grid-3d">
+            <div class="tech-ball">
+                <i class="fa-brands fa-python" style="color:#f472b6;"></i>
+                <span class="tech-label">Python 3</span>
+            </div>
+            <div class="tech-ball">
+                <i class="fa-solid fa-network-wired" style="color:#f9a8d4;"></i>
+                <span class="tech-label">Scikit-Learn</span>
+            </div>
+            <div class="tech-ball">
+                <i class="fa-solid fa-flask" style="color:#fbcfe8;"></i>
+                <span class="tech-label">Flask</span>
+            </div>
+            <div class="tech-ball">
+                <i class="fa-solid fa-chart-column" style="color:#be185d;"></i>
+                <span class="tech-label">Chart.js</span>
+            </div>
+            <div class="tech-ball">
+                <i class="fa-brands fa-html5" style="color:#f9a8d4;"></i>
+                <span class="tech-label">HTML/CSS3</span>
+            </div>
+            <div class="tech-ball">
+                <i class="fa-brands fa-js" style="color:#ec4899;"></i>
+                <span class="tech-label">JavaScript</span>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    /* ══════════════════════════════════════════
+       Intersection Observers (Reveal Logic)
+    ══════════════════════════════════════════ */
+    const timelineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.reveal-trigger').forEach(el => timelineObserver.observe(el));
+
+
+    /* ══════════════════════════════════════════
+       3D TILT EFFECT for Cards
+    ══════════════════════════════════════════ */
+    document.querySelectorAll('.tilt-card-wrapper').forEach(wrapper => {
+        const card = wrapper.querySelector('.ServiceCard');
+
+        wrapper.addEventListener('mousemove', (e) => {
+            const rect = wrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -15;
+            const rotateY = ((x - centerX) / centerX) * 15;
+
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+            card.style.transition = `transform 0.5s ease-out`;
+            setTimeout(() => { card.style.transition = `transform 0.1s`; }, 500);
+        });
+    });
+
+    /* ══════════════════════════════════════════
+       THREE.JS PARTICLE BACKGROUND
+    ══════════════════════════════════════════ */
+    const initThreeJS = () => {
+        const canvas = document.getElementById('bg-canvas');
+        if (!canvas) return;
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2('#15050a', 0.001);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 100;
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Create Star Particles
+        const geometry = new THREE.BufferGeometry();
+        const particlesCount = 2000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 500;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        // Custom texture for softer stars
+        const createCircleTexture = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const context = canvas.getContext('2d');
+            const gradient = context.createRadialGradient(16, 16, 0, 16, 16, 16);
+            gradient.addColorStop(0, 'rgba(255,255,255,1)');
+            gradient.addColorStop(0.2, 'rgba(255,255,255,0.8)');
+            gradient.addColorStop(0.5, 'rgba(236,72,153,0.2)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, 32, 32);
+            return new THREE.CanvasTexture(canvas);
+        };
+
+        const material = new THREE.PointsMaterial({
+            size: 2,
+            map: createCircleTexture(),
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            color: 0xffffff
+        });
+
+        const particlesMesh = new THREE.Points(geometry, material);
+        scene.add(particlesMesh);
+
+        // Mouse Interactivity
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
+
+        // Loop
+        const clock = new THREE.Clock();
+
+        const tick = () => {
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotate
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.x = elapsedTime * 0.02;
+
+            // Parallax
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+
+            particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+            particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(tick);
+        };
+
+        tick();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    };
+
+    window.addEventListener('DOMContentLoaded', initThreeJS);
+
+</script>
+{% endblock %}

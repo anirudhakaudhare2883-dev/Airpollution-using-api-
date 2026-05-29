@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}System Architecture{% endblock %}
+{% block nav_about %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ══════════════════════════════════════════
+       PREMIUM PINK ARCHITECTURE PAGE
+    ══════════════════════════════════════════ */
+    .arch-hero {
+        padding: 10rem 0 6rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .arch-hero h1 {
+        font-size: 5rem;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        letter-spacing: -2px;
+        background: linear-gradient(135deg, #fbcfe8, #ec4899, #be185d);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 40px rgba(236, 72, 153, 0.4);
+    }
+
+    .arch-hero p {
+        font-size: 1.3rem;
+        color: #fbcfe8;
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+
+    /* ── VERTICAL TIMELINE ── */
+    .timeline-container {
+        position: relative;
+        max-width: 1000px;
+        margin: 0 auto 10rem;
+        padding: 2rem 0;
+    }
+
+    /* The Central Pink Pulse Line */
+    .timeline-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 4px;
+        background: rgba(236, 72, 153, 0.1);
+        transform: translateX(-50%);
+        border-radius: 4px;
+    }
+
+    /* Animated Laser down the line */
+    .timeline-laser {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 4px;
+        height: 0;
+        background: linear-gradient(to bottom, transparent, #ec4899, #f472b6, #fff);
+        transform: translateX(-50%);
+        border-radius: 4px;
+        box-shadow: 0 0 20px #ec4899, 0 0 40px #f472b6;
+        transition: height 0.5s ease-out;
+        z-index: 1;
+    }
+
+    .timeline-node {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 6rem;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .timeline-node:nth-child(even) {
+        justify-content: flex-start;
+    }
+
+    .timeline-node.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* The glowing pink dot in the middle */
+    .timeline-dot {
+        position: absolute;
+        left: 50%;
+        width: 24px;
+        height: 24px;
+        background: #1b1216;
+        border: 4px solid #ec4899;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.1);
+        transition: all 0.4s;
+    }
+
+    .timeline-node.visible .timeline-dot {
+        background: #ec4899;
+        border-color: #fbcfe8;
+        box-shadow: 0 0 30px #ec4899, 0 0 0 8px rgba(236, 72, 153, 0.3);
+    }
+
+    /* Content Cards */
+    .timeline-content {
+        width: 42%;
+        background: linear-gradient(145deg, rgba(38, 23, 30, 0.8), rgba(27, 18, 22, 0.95));
+        border: 1px solid rgba(236, 72, 153, 0.2);
+        padding: 2.5rem;
+        border-radius: 1.5rem;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        position: relative;
+        transition: transform 0.4s ease, border-color 0.4s ease;
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-5px);
+        border-color: #ec4899;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(236, 72, 153, 0.2);
+    }
+
+    /* Arrow pointing to timeline */
+    .timeline-content::before {
+        content: '';
+        position: absolute;
+        top: 28px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+    }
+
+    /* Left Side Arrow */
+    .timeline-node:nth-child(odd) .timeline-content::before {
+        right: -15px;
+        border-width: 15px 0 15px 15px;
+        border-color: transparent transparent transparent rgba(38, 23, 30, 0.8);
+    }
+
+    /* Right Side Arrow */
+    .timeline-node:nth-child(even) .timeline-content::before {
+        left: -15px;
+        border-width: 15px 15px 15px 0;
+        border-color: transparent rgba(38, 23, 30, 0.8) transparent transparent;
+    }
+
+    /* Card Details */
+    .node-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(236, 72, 153, 0.15);
+        color: #f472b6;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(236, 72, 153, 0.4);
+        box-shadow: inset 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+
+    .timeline-content h3 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 1rem;
+        letter-spacing: -0.5px;
+    }
+
+    .timeline-content p {
+        color: #fbcfe8;
+        line-height: 1.7;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .tech-badge {
+        background: rgba(236, 72, 153, 0.1);
+        border: 1px solid rgba(236, 72, 153, 0.3);
+        color: #fce7f3;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-family: 'JetBrains Mono', monospace;
+        letter-spacing: 0.5px;
+    }
+
+    /* ── MOBILE RESPONSIVENESS ── */
+    @media (max-width: 768px) {
+        .timeline-container::before, .timeline-laser {
+            left: 30px;
+        }
+
+        .timeline-node, .timeline-node:nth-child(even) {
+            justify-content: flex-end;
+        }
+
+        .timeline-dot {
+            left: 30px;
+        }
+
+        .timeline-content {
+            width: calc(100% - 80px);
+        }
+
+        /* All arrows point left on mobile */
+        .timeline-node:nth-child(odd) .timeline-content::before,
+        .timeline-node:nth-child(even) .timeline-content::before {
+            right: auto;
+            left: -15px;
+            border-width: 15px 15px 15px 0;
+            border-color: transparent rgba(38, 23, 30, 0.8) transparent transparent;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="container">
+
+    <section class="arch-hero reveal-up">
+        <h1>Machine Learning Pipeline</h1>
+        <p>A completely overhauled, highly sequential architecture tracking the exact flow of data—from frontend geographic resolution to the final ensemble tree prediction.</p>
+    </section>
+
+    <div class="timeline-container" id="timeline">
+        <div class="timeline-laser" id="laser"></div>
+
+        <!-- Node 1 -->
+        <div class="timeline-node">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="node-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                <h3>1. Geospatial Resolution Engine</h3>
+                <p>The client side initiates the pipeline by securely translating regional string inputs (City, State, Country) into fixed mathematical Latitude and Longitude bounding coordinates.</p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Nominatim Geocoding</span>
+                    <span class="tech-badge">Float Validation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Node 2 -->
+        <div class="timeline-node">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="node-icon" style="color: #fda4af; border-color: rgba(253, 164, 175, 0.5);"><i class="fa-solid fa-satellite-dish"></i></div>
+                <h3>2. Asynchronous Telemetry Bridge</h3>
+                <p>A secure Python backend extracts real-time environmental data streams from external sensors via concurrent HTTP requests, gathering critical PM2.5, PM10, and Ozone vectors.</p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Python Requests</span>
+                    <span class="tech-badge">JSON Parsing</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Node 3 -->
+        <div class="timeline-node">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="node-icon" style="color: #f9a8d4; border-color: rgba(249, 168, 212, 0.5);"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>3. Vectorized Feature Engineering</h3>
+                <p>The raw telemetry is injected into memory, mapped to structured DataFrames, and mathematically scaled ensuring standard distribution matching for precise inference.</p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Pandas Matrix</span>
+                    <span class="tech-badge">MinMax Scaling</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Node 4 -->
+        <div class="timeline-node">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="node-icon" style="color: #fff; background: #be185d;"><i class="fa-solid fa-brain"></i></div>
+                <h3>4. Ensemble Random Forest Inference</h3>
+                <p>The pre-trained model unpickles its decision structure, propagating the normalized feature vector through over 100 deep-split estimators to calculate the definitive AQI score.</p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Scikit-Learn</span>
+                    <span class="tech-badge">Joblib Aggregation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Node 5 -->
+        <div class="timeline-node">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="node-icon" style="color: #ec4899; box-shadow: inset 0 0 30px rgba(236,72,153,0.6);"><i class="fa-solid fa-display"></i></div>
+                <h3>5. Interface Dynamic Binding</h3>
+                <p>The Flask WSGI framework completes the cycle, dynamically rendering the response data into the DOM. This generates the final interactive glassmorphic dashboard output.</p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Jinja2 Engine</span>
+                    <span class="tech-badge">Chart.js Binding</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const nodes = document.querySelectorAll('.timeline-node');
+        const laser = document.getElementById('laser');
+        
+        // Node Reveal Animation
+        const nodeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        nodes.forEach(node => {
+            nodeObserver.observe(node);
+        });
+
+        // Laser scroll logic
+        window.addEventListener('scroll', () => {
+            const timeline = document.getElementById('timeline');
+            if(!timeline) return;
+            
+            const rect = timeline.getBoundingClientRect();
+            // Start moving laser when user scrolls down the timeline
+            let height = 0;
+            if (rect.top < window.innerHeight / 1.5) {
+                height = (window.innerHeight / 1.5) - rect.top;
+            }
+            
+            // Limit laser to timeline height
+            if (height < 0) height = 0;
+            if (height > rect.height) height = rect.height;
+            
+            laser.style.height = height + "px";
+        });
+    });
+</script>
+{% endblock %}

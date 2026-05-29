@@ -1,0 +1,31 @@
+--- How to run this application in VSCode ---
+
+1. Open the Project Folder
+   - Open VSCode.
+   - Go to `File > Open Folder` and select the `Airpollution/main` folder.
+
+2. Open the Integrated Terminal
+   - In the top menu, go to `Terminal > New Terminal` (or press `Ctrl` + `\`` on your keyboard).
+
+3. Create and Activate a Virtual Environment
+   - First, create the environment by running:
+     python -m venv venv
+   - Next, activate the environment. 
+     If you are using Command Prompt (cmd), run:
+     venv\Scripts\activate
+     If you are using PowerShell, run:
+     .\venv\Scripts\Activate.ps1
+   - (You will know it worked if you see `(venv)` at the beginning of your terminal line).
+
+4. Install Dependencies
+   - In the activated terminal, run the following command to install everything needed:
+     pip install -r requirements.txt
+
+5. Start the Application
+   - Once installation finishes, start the server using this command:
+     python app.py
+
+6. View the Dashboard
+   - Open your web browser (Chrome, Edge, etc.).
+   - Go to the local address provided in the terminal, which is usually:
+     http://127.0.0.1:5000

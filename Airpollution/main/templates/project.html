@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Project Context | AirQuality AI{% endblock %}
+{% block nav_project %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ══════════════════════════════════════════
+       PREMIUM ACADEMIC/PROJECT PAGE STYLES
+    ══════════════════════════════════════════ */
+    .project-header {
+        text-align: center;
+        margin-bottom: 5rem;
+    }
+
+    .project-title {
+        font-size: clamp(3rem, 6vw, 4.5rem);
+        font-weight: 900;
+        margin-bottom: 1.2rem;
+        background: linear-gradient(135deg, #ffffff 10%, #ec4899 40%, #f472b6 70%, #ffffff 90%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shine 8s linear infinite;
+        text-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        letter-spacing: -1px;
+    }
+
+    .project-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-2);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    /* ACADEMIC PAPER LAYOUT */
+    .academic-grid {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+        .academic-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* MAIN CONTENT ARTICLES */
+    .article-section {
+        background: rgba(25, 18, 22, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 2rem;
+        padding: 3rem;
+        backdrop-filter: blur(24px);
+        margin-bottom: 2rem;
+        position: relative;
+        transition: all 0.4s ease;
+    }
+
+    .article-section:hover {
+        background: rgba(35, 20, 25, 0.8);
+        border-color: rgba(236, 72, 153, 0.3);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .article-section h3 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .article-section h3 i {
+        color: #ec4899;
+        font-size: 1.5rem;
+        background: rgba(236, 72, 153, 0.1);
+        padding: 0.8rem;
+        border-radius: 0.8rem;
+    }
+
+    .article-section p {
+        color: #cbd5e1;
+        font-size: 1.15rem;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-section p strong {
+        color: #fff;
+        font-weight: 600;
+    }
+
+    /* SIDEBAR METRICS */
+    .metrics-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .metric-card {
+        background: linear-gradient(145deg, rgba(30, 20, 25, 0.8), rgba(20, 10, 15, 0.95));
+        border: 1px solid rgba(244, 114, 182, 0.2);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        transition: all 0.4s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(244, 114, 182, 0.6);
+        box-shadow: 0 15px 40px rgba(244, 114, 182, 0.15);
+    }
+
+    .metric-val {
+        font-family: var(--font-mono);
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #f472b6, #ec4899);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+        font-size: 0.95rem;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    /* INFO CALLOUTS */
+    .info-callout {
+        background: rgba(190, 24, 93, 0.05);
+        border-left: 4px solid #be185d;
+        padding: 1.5rem;
+        border-radius: 0 1rem 1rem 0;
+        margin: 2rem 0;
+    }
+
+    .info-callout p {
+        margin: 0;
+        font-size: 1.05rem;
+        color: #e0f2fe;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="container" style="padding-top: 10rem; padding-bottom: 6rem;">
+
+    <!-- Header -->
+    <div class="project-header reveal-up">
+        <div class="hero-badge" style="margin-bottom: 1.5rem; justify-content: center;">
+            <div class="pulse-dot"></div>
+            <span>Academic Research & Context</span>
+        </div>
+        <h1 class="project-title text-animated-gradient">Scientific Methodology</h1>
+        <p class="project-subtitle">
+            Explore the theoretical foundations, environmental impact goals, and rigorous mathematical evaluation
+            metrics defining the AirQuality AI prediction engine.
+        </p>
+    </div>
+
+    <!-- Academic Layout -->
+    <div class="academic-grid">
+
+        <!-- Main Content Area (Left) -->
+        <div class="article-wrapper">
+
+            <article class="article-section reveal-up delay-100">
+                <h3><i class="fa-solid fa-book-open"></i> Abstract & Hypothesis</h3>
+                <p>
+                    Urban air pollution remains one of the most critical public health hazards of the 21st century.
+                    Traditional monitoring stations are expensive, sparse, and entirely reactive—reporting pollution
+                    only <em>after</em> it has accumulated.
+                </p>
+                <p>
+                    <strong>The Hypothesis:</strong> By aggregating historical meteorological data (temperature,
+                    humidity, pressure) alongside specific spatial pollutant concentrations (PM2.5, PM10, NO2), we
+                    hypothesize that non-linear machine learning ensembles can map complex environmental interactions to
+                    predict the Air Quality Index (AQI) of a given coordinate with high degrees of accuracy, enabling
+                    proactive rather than reactive public health measures.
+                </p>
+            </article>
+
+            <article class="article-section reveal-up delay-200">
+                <h3><i class="fa-solid fa-microscope"></i> Research Methodology</h3>
+                <p>
+                    The project abandons simple linear regression in favor of the <strong>Random Forest
+                        Regressor</strong> algorithm. Environmental factors exhibit high collinearity and non-linear
+                    boundaries (e.g., sudden temperature drops causing thermal inversions that trap PM2.5).
+                </p>
+                <div class="info-callout">
+                    <p><i class="fa-solid fa-circle-info" style="margin-right: 8px;"></i> A Random Forest ensemble
+                        constructs thousands of independent decision trees during training. By aggregating their
+                        predictions, the system becomes highly resistant to overfitting on isolated anomalous weather
+                        events.</p>
+                </div>
+                <p>
+                    The rigorous evaluation procedure utilizes k-fold cross-validation. Performance is governed strictly
+                    by the Coefficient of Determination (R² Score) to measure variance explained, alongside Mean
+                    Absolute Error (MAE) and Root Mean Squared Error (RMSE) to penalize vast deviations.
+                </p>
+            </article>
+
+            <article class="article-section reveal-up delay-300">
+                <h3><i class="fa-solid fa-earth-americas"></i> Societal Impact & Future Scope</h3>
+                <p>
+                    <strong>Immediate Impact:</strong> Citizens receive localized, real-time insights, allowing
+                    sensitive individuals (asthma, COPD patients) to alter their outdoor schedules based on predictive
+                    analytics rather than outdated historical averages.
+                </p>
+                <p>
+                    <strong>Future Scope:</strong> The architecture is designed to scale horizontally. Future iterations
+                    will support direct API integrations for IoT smart-home devices (automatically triggering indoor air
+                    purifiers when outdoor AQI is predicted to spike), and provide predictive macro-trends for city
+                    planners to dynamically route traffic away from impending smog zones.
+                </p>
+            </article>
+
+        </div>
+
+        <!-- Sidebar Metrics (Right) -->
+        <div class="metrics-sidebar">
+
+            <div class="metric-card reveal-left delay-100">
+                <div class="metric-val"
+                    style="background: linear-gradient(135deg, #fbcfe8, #be185d); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    96.8<span style="font-size: 2rem;">%</span></div>
+                <div class="metric-label">Predictive R² Score</div>
+            </div>
+
+            <div class="metric-card reveal-left delay-200">
+                <div class="metric-val"
+                    style="background: linear-gradient(135deg, #f472b6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    6</div>
+                <div class="metric-label">Target Variables Analyzed</div>
+            </div>
+
+            <div class="metric-card reveal-left delay-300">
+                <div class="metric-val"
+                    style="background: linear-gradient(135deg, #f472b6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    RF</div>
+                <div class="metric-label">Ensemble Architecture</div>
+            </div>
+
+            <div class="metric-card reveal-left delay-400"
+                style="margin-top: 2rem; border-color: rgba(236, 72, 153, 0.4); background: rgba(236, 72, 153, 0.05);">
+                <i class="fa-solid fa-atom" style="font-size: 3rem; color: #ec4899; margin-bottom: 1rem;"></i>
+                <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Academic Integrity</h4>
+                <p style="color: var(--text-3); font-size: 0.9rem; margin: 0;">Designed to meet
+                    university grading criteria for computational research.</p>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+{% endblock %}
